@@ -12,6 +12,6 @@ sequenceDiagram
     browser->>server:HTTP GET to address defined in header's Location, in this case /notes
     
     browser reloads reload Notes page
-    brower->>server: HTTP GET main.css, HTTP GET main.js,HTTP GET data.json
+    browser->>server: HTTP GET main.css, HTTP GET main.js,HTTP GET data.json
     server->>browser: the css, js and data.json files
 ```
