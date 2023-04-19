@@ -9,7 +9,7 @@ sequenceDiagram
     browser->>server: HTTP POST to the server address new_note
     server->>browser: HTTP status code 302 (URL redirect)
     
-    browser->>server: HTTP GET to case /notes, the address defined in header's Location
+    browser->>server: HTTP GET to  location "/notes", the address defined in header
     
     browser->>server: HTTP GET main.css, HTTP GET main.js, HTTP GET data.json 
     server->>browser: sending the css js and data.json files
