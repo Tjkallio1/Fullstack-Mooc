@@ -6,10 +6,10 @@ sequenceDiagram
     participant browser
     participant server
     
-    browser->>server: HTTP POST to the server adress new_note
-    the text written in the submit form is sent
+    browser->>server: HTTP POST to the server address new_note
+    Note over browser: text written in the submit form is sent
     server->>browser: HTTP status code 302 (URL redirect)
-    asks browser to do new request
+    server asks browser to do new request
     
     browser->>server: HTTP GET to case /notes
     address defined in header's Location
