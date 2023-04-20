@@ -6,8 +6,9 @@ sequenceDiagram
     participant browser
     participant server
     
-    browser->>server: HTTP POST to the server address new_note
-    server->>browser: HTTP status code 302 (URL redirect)
+    browser->>server: HTTP POST to the server address new_note 
+    Note right of browser: user clicks save button, the form defines action and method attributes
+    server->>browser: HTTP status code 302 (URL redirect), asks browser to make new request
     
     browser->>server: HTTP GET to  location "/notes", the address defined in header
     
