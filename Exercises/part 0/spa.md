@@ -7,5 +7,5 @@ sequenceDiagram
     participant server
 
     browser->>server: HTTP GET to address https://studies.cs.helsinki.fi/exampleapp/spa.js
-    server->>browser:Sends a JavaScript code (spa.js)
+    server->>browser:Returns HTML document and a JavaScript file (spa.js)
 ```
