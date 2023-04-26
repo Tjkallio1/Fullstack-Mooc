@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import personService from './services/personService'
+
 
 const Filter = ({ searchQuery, handleSearchChange }) => {
   return (
@@ -24,15 +26,17 @@ const PersonForm = ({ newName, newNumber, handleNameChange, handleNumberChange, 
   )
 }
 
-const Persons = ({ persons, searchQuery }) => {
-const filteredNumbers = persons.filter((person) =>
-    person.name.toLowerCase().includes(searchQuery.toLowerCase())
+const Persons = ({ persons, searchQuery, handleDelete}) => {
+  const filteredNumbers = persons
+    .filter(person => person.name)
+    .filter(person => person.name.toLowerCase().includes(searchQuery.toLowerCase()) 
     )
   return (
       <div>
         {filteredNumbers.map(person => (
         <div key={person.id}>
-            {person.name} {person.number}
+            <span>{person.name} {person.number}</span>
+            <button onClick={() => handleDelete(person)}>delete</button>
         </div>
       ))}
     </div>
@@ -45,22 +49,61 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
 
+  useEffect(() => {
+    console.log('effect')
+    personService
+      .getAll()
+      .then(response => {
+        console.log('promise fulfilled')
+        setPersons(response.data)
+      })
+  }, [])
+  console.log('render', persons.length, 'persons')
+
   const addName = (ev) => {
     ev.preventDefault()
     console.log('button clicked', ev.target)
 
     const checkDouble = persons.filter(person => person.name === newName)
+    const updateNumber = persons.filter(person => person.name ===newName)
 
     const newPerson = {
       name: newName,
       number: newNumber,
       id: persons.length + 1
     }
-    checkDouble.length > 0 
-    ? window.alert(`${newName} is already added to phonebook!`)
-    : setPersons(persons.concat(newPerson))
-    setNewName('')
-    setNewNumber('')
+    if(checkDouble.length > 0 && updateNumber.length > 0) {
+      window.alert(`${newName} is already added to phonebook, replace the old number with the new one?`)
+      personService
+        .save(updateNumber[0].id, {...updateNumber[0], number: newNumber})
+        .then(response => {
+          console.log(response)
+        })
+        return
+      }
+
+    if(checkDouble.length >0) {
+      window.alert(`${newName} is already added to phonebook!`)
+      return
+    }
+    
+    personService
+      .create(newPerson)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+        console.log(response)
+        setNewName('')
+        setNewNumber('')
+      })
+
+      if (updateNumber.length > 0) {
+      window.alert(`${newName} is already added to phonebook, replace the old number with the new one?`)
+      personService
+        .save(updateNumber[0].id, {...updateNumber[0], number: newNumber})
+        .then(response => {
+          console.log(response)
+        })
+      }
   }
 
   const handleNameChange = (ev) => {
@@ -77,6 +120,16 @@ const App = () => {
     setSearchQuery(ev.target.value)
   }
 
+  const handleDelete = (person) => {
+    console.log(person.id)
+    window.alert(`Delete ${person.name}?`)
+    personService
+      .deletePerson(person.id)
+      .then(response => {
+        console.log('Person deleted:', response.data)
+      })
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -90,7 +143,7 @@ const App = () => {
       addName={addName}
       />
       <h3>Numbers</h3>
-      <Persons persons={persons} searchQuery={searchQuery} />
+      <Persons persons={persons} searchQuery={searchQuery} handleDelete={handleDelete} />
     </div>
   )
 }
