@@ -1,6 +1,17 @@
 import { useState, useEffect } from 'react'
 import personService from './services/personService'
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div>
+      {message && <div className='message'>{message}</div>}
+    </div>
+  )
+}
 
 const Filter = ({ searchQuery, handleSearchChange }) => {
   return (
@@ -48,6 +59,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     console.log('effect')
@@ -78,6 +90,11 @@ const App = () => {
         .save(updateNumber[0].id, {...updateNumber[0], number: newNumber})
         .then(response => {
           console.log(response)
+          setMessage(
+            `User ${newName}'s number has been updated.`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
         })
         return
       }
@@ -94,8 +111,13 @@ const App = () => {
         console.log(response)
         setNewName('')
         setNewNumber('')
-      })
-
+        setMessage(
+          `Added ${newName}.`)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+    })
+  
       if (updateNumber.length > 0) {
       window.alert(`${newName} is already added to phonebook, replace the old number with the new one?`)
       personService
@@ -127,12 +149,18 @@ const App = () => {
       .deletePerson(person.id)
       .then(response => {
         console.log('Person deleted:', response.data)
-      })
+        setMessage(
+          `User ${person.name} deleted.`)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+    })
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter searchQuery={searchQuery} handleSearchChange={handleSearchChange}/>
       <h3>Add new</h3>
       <PersonForm
