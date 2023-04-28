@@ -1,13 +1,29 @@
 const express = require('express')
+const morgan = require('morgan') 
+const cors = require('cors')
+
 const app = express()
 
 app.use(express.json())
+app.use(morgan('combined'))
+app.use(cors())
 
 const currentDate = Date()
 
 function getRandomId(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
 }
+
+morgan(function (tokens, req, res) {
+    return [
+      tokens.method(req, res),
+      tokens.url(req, res),
+      tokens.status(req, res),
+      tokens.res(req, res, 'content-length'), '-',
+      tokens['response-time'](req, res), 'ms'
+    ].join(' ')
+  })
+
 
 let persons = [
     {
@@ -68,12 +84,29 @@ app.get('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
     const newId = getRandomId(10,150)
-    const person = request.body
-    person.id = newId
+    const body = request.body
+    
+    if(!body.name || !body.number) {
+        return response.status(400).json ({
+            error: 'name or number missing'
+        })
+    }
+
+    const existingPerson = persons.find(person => person.name === body.name)
+    if(existingPerson) {
+        return response.status(400).json ({
+            error: 'name must be unique'
+        })
+    }
+    
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: newId
+    }
     persons.push(person)
     console.log(person)
     response.json(person)
-    // virhekäsitteluy vielä (osa 3.6)
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -83,6 +116,7 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end()
 })
 
-const PORT = 3001
-app.listen(PORT)
-console.log(`Server running on port ${PORT}`)
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
+})

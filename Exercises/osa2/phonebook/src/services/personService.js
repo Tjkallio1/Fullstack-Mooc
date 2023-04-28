@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { v4 as uuidv4} from 'uuid'
 
-const baseUrl = 'http://localhost:3001/persons'
+const baseUrl = 'http://localhost:3001/api/persons'
 
     const getAll = () => {
         return axios.get(baseUrl)
