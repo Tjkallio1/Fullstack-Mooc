@@ -7,6 +7,7 @@ const app = express()
 app.use(express.json())
 app.use(morgan('combined'))
 app.use(cors())
+app.use(express.static('build'))
 
 const currentDate = Date()
 
