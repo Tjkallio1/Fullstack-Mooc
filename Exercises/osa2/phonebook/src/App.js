@@ -60,7 +60,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
   const [message, setMessage] = useState('')
-
+  
   useEffect(() => {
     console.log('effect')
     personService
@@ -82,7 +82,7 @@ const App = () => {
     const newPerson = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1
+      //id: persons.length + 1
     }
     if(checkDouble.length > 0 && updateNumber.length > 0) {
       window.alert(`${newName} is already added to phonebook, replace the old number with the new one?`)
@@ -111,13 +111,18 @@ const App = () => {
         console.log(response)
         setNewName('')
         setNewNumber('')
-        setMessage(
-          `Added ${newName}.`)
+        setMessage(`Added ${newName}.`)
         setTimeout(() => {
           setMessage(null)
         }, 5000)
-    })
-  
+        })
+        .catch(error => {    
+          setMessage(JSON.stringify(error.response.data))
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+        })
+
       if (updateNumber.length > 0) {
       window.alert(`${newName} is already added to phonebook, replace the old number with the new one?`)
       personService
@@ -173,7 +178,8 @@ const App = () => {
       <h3>Numbers</h3>
       <Persons persons={persons} searchQuery={searchQuery} handleDelete={handleDelete} />
     </div>
-  )
+    )
 }
+
 
 export default App
