@@ -3,5 +3,8 @@
     "mermaid": "^10.1.0",
     "mongodb": "^5.3.0",
     "mongoose": "^7.1.0"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0"
   }
 }
