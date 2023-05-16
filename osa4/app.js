@@ -1,6 +1,7 @@
 const config = require('./utils/config')
 const logger = require('./utils/logger')
 const express = require('express')
+const usersRouter = require('./controllers/users')
 const blogsRouter = require('./controllers/blogs')
 const middleware = require('./utils/middleware')
 const app = express()
@@ -25,6 +26,7 @@ app.use(express.json())
 app.use(middleware.requestLogger)
 
 app.use('/api', blogsRouter) // tänne määritellään /api URL:iin, blogsissa taas /blogs, muuten api menee tuplana!
+app.use('/api', usersRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
