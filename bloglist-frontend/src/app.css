@@ -1,0 +1,11 @@
+.message-success {
+    border: 2px solid green;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .message-error {
+    border: 2px solid red;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
