@@ -3,6 +3,9 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './app.css'
+import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -14,6 +17,7 @@ const App = () => {
   const [newUrl, setNewUrl] = useState('')
   const [message, setMessage] = useState({ text:'', type: ''})
   const [error, setError] = useState({ text:'', type: ''})
+  const [loginVisible, setLoginVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -91,30 +95,20 @@ const App = () => {
         {error.text && (
           <div className={`error ${error.type === 'message' ? 'message-success' : 'message-error'}`}>
             {error.text}
-          </div>
-    )}
-        <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          password
-          <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
       </div>
+    )}
+      <div>
+        <Togglable buttonLabel='Login'>
+          <LoginForm
+            username={username}
+            password={password}
+            handleUserChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+        </Togglable>
+          </div>
+        </div>
     )
   }
 
@@ -122,41 +116,26 @@ const App = () => {
     <div>
       <h2>Blogs</h2>
       <p>
-        {user.name} logged in <button onClick={handleLogout}>Logout</button>
+        {user.name} is logged in <button onClick={handleLogout}>Logout</button>
       </p>
       {message.text && (
       <div className={`message ${message.type === 'message' ? 'message-success' : 'message-error'}`}>
         {message.text}
       </div>
-    )}
-      <h3>Create new</h3>
-      <form onSubmit={createBlog}>
-        <div>
-          Title
-          <input
-            type="text"
-            value={newBlog}
-            onChange={({ target }) => setNewBlog(target.value)}
+      )}
+      <div>
+        <Togglable buttonLabel="Add new blog">
+          <BlogForm
+            title={newBlog}
+            author={newAuthor}
+            url={newUrl}
+            handleTitle={({ target }) => setNewBlog(target.value)}
+            handleAuthor={({ target }) => setNewAuthor(target.value)}
+            handleUrl={({ target }) => setNewUrl(target.value)}
+            handleSubmit={createBlog}
           />
-        </div> 
-        <div>
-        Author
-          <input
-            type="text"
-            value={newAuthor}
-            onChange={({ target }) => setNewAuthor(target.value)}
-          />
-          </div>
-          <div>
-          Url
-          <input
-            type="text"
-            value={newUrl}
-            onChange={({ target }) => setNewUrl(target.value)}
-          />
-          </div>
-          <button type="submit">Create</button>
-      </form>
+        </Togglable>
+      </div>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
