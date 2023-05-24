@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -33,6 +33,8 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+  const blogFormRef = useRef()
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -82,6 +84,7 @@ const App = () => {
       setTimeout(() => {
         setMessage({ text: '', type: '' })
       }, 5000)
+      blogFormRef.current.toggleVisibility()
     } catch (exception) {
       setTimeout(() => {
       }, 5000)
@@ -124,7 +127,7 @@ const App = () => {
       </div>
       )}
       <div>
-        <Togglable buttonLabel="Add new blog">
+        <Togglable buttonLabel="Add new blog" ref={blogFormRef}>
           <BlogForm
             title={newBlog}
             author={newAuthor}
