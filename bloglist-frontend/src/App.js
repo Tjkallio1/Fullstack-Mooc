@@ -36,6 +36,18 @@ const App = () => {
 
   const blogFormRef = useRef()
 
+  const BlogsList = ({ blogs }) => {
+    const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
+
+    return (
+      <div>
+        {sortedBlogs.map((blog) =>
+        <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} />
+        )}
+      </div>
+    )
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
     console.log('logging in with', username, password)
@@ -76,6 +88,7 @@ const App = () => {
     }
     try {
       const addedBlog = await blogService.create(newObject)
+      addedBlog.iser = user
       setBlogs([...blogs, addedBlog])
       setNewBlog('')
       setNewAuthor('')
@@ -139,9 +152,7 @@ const App = () => {
           />
         </Togglable>
       </div>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
+      <BlogsList blogs={blogs}/>
     </div>
   )
 }

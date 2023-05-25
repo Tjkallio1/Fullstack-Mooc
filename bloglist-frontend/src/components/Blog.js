@@ -1,10 +1,31 @@
 import { useState } from "react"
+import blogService from "../services/blogs"
 
-const Blog = ({blog}) => {
+const Blog = ({blog, blogs, setBlogs}) => {
   const [showDetails, setShowDetails] = useState(false)
 
   const toggleDetails = () => {
     setShowDetails(!showDetails)
+  }
+
+  const addLike = async () => {
+    const updatedBlog = {...blog, likes: blog.likes +1}
+    try {
+      const returnedBlog = await blogService.update(blog.id, updatedBlog)
+      setBlogs((prevBlogs) =>
+        prevBlogs.map((b) => (b.id === returnedBlog.id ? returnedBlog : b))
+      )
+    } catch (exception) {
+    }
+  }
+
+  const deleteBlog = async () => {
+    if(window.confirm(`Do you want to remove blog "${blog.title}"?`))
+      try {
+        await blogService.remove(blog.id)
+        setBlogs(blogs.filter((b) => b.id !== blog.id ))
+      } catch (exception) {
+      }
   }
 
   const blogStyle = {
@@ -23,10 +44,11 @@ const Blog = ({blog}) => {
       <div>
         <div>{blog.url}</div>
         <div>
-          Likes: {blog.likes} <button>Like</button>
+          Likes: {blog.likes} <button onClick={addLike}>Like</button>
         </div>
         <div>
-          {blog.user && blog.user.name}
+          {blog.user && <div>{blog.user.name}</div>}
+          <button onClick={deleteBlog}>Delete</button>
         </div>
       </div>
     )}
