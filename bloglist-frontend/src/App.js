@@ -53,7 +53,7 @@ const App = () => {
     }
   }
 
-  const BlogsList = ({ blogs }) => {
+  const BlogsList = ({ blogs, setBlogs, addLike }) => {
     const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
 
     return (
@@ -105,7 +105,7 @@ const App = () => {
     }
     try {
       const addedBlog = await blogService.create(newObject)
-      addedBlog.iser = user
+      addedBlog.user = user
       setBlogs([...blogs, addedBlog])
       setNewBlog('')
       setNewAuthor('')
@@ -169,7 +169,7 @@ const App = () => {
           />
         </Togglable>
       </div>
-      <BlogsList blogs={blogs} />
+      <BlogsList blogs={blogs} setBlogs={setBlogs} addLike={addLike} />
     </div>
   )
 }

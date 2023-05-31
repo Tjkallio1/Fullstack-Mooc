@@ -50,6 +50,7 @@ test('clicking like button will call the event handler twice', async () => {
   }
 
   const addLike = jest.fn()
+  const setBlogs = jest.fn()
 
   blogService.update = jest.fn().mockResolvedValue({
     ...blog,
@@ -57,7 +58,7 @@ test('clicking like button will call the event handler twice', async () => {
   })
 
   const component = render(
-    <Blog blog={blog} addLike={addLike} />
+    <Blog blog={blog} addLike={addLike} setBlogs={setBlogs} />
   )
 
   fireEvent.click(component.getByText('View'))
@@ -69,10 +70,3 @@ test('clicking like button will call the event handler twice', async () => {
   })
 })
 
-
-/*
-  userEvent.click(likeButton)
-  console.log('mockUpdate calls after second click:', mockUpdate.mock.calls)
-
-  expect(mockUpdate.mock.calls).toHaveLength(2)
-*/

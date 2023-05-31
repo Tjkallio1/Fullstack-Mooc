@@ -9,7 +9,7 @@ const Blog = ({ blog, blogs, setBlogs, addLike }) => {
     setShowDetails(!showDetails)
   }
 
-  const handleLike = async (setBlogs,  addLike) => {
+  const handleLike = async () => {
     try {
       console.log('Blog ID:', blog.id)
       const updatedBlog = {
@@ -17,22 +17,11 @@ const Blog = ({ blog, blogs, setBlogs, addLike }) => {
         likes: blog.likes + 1
       }
       console.log('handleLike called')
-      //const updatedBlog = { ...blog, likes: blog.likes + 1 }
       console.log('Current blog:', blog)
-      /*
-    try {
-      const returnedBlog = await blogService.update(blog.id, updatedBlog)
-      setBlogs((prevBlogs) =>
-        prevBlogs.map((b) => (b.id === returnedBlog.id ? returnedBlog : b))
-      )
-    } catch (exception) {
-    }
-    */
       const returnedBlog = await blogService.update(blog.id, updatedBlog)
       console.log('Updated blog:', updatedBlog)
       setBlogs((prevBlogs) =>
         prevBlogs.map((b) => {
-          //console.log('Current blog in map:', b)
           return b.id === returnedBlog.id ? returnedBlog : b
         })
       )
@@ -67,19 +56,23 @@ const Blog = ({ blog, blogs, setBlogs, addLike }) => {
   }
   return (
     <div style={blogStyle}>
-      <div>
-        {blog.title} {blog.author} <button onClick={toggleDetails}>{showDetails ? 'Hide' : 'View'}</button>
-      </div>
-      {showDetails && (
+      {blog && (
         <div>
-          <div>{blog.url}</div>
           <div>
-          Likes: {blog.likes} <button onClick={() => handleLike(addLike)}>Like</button>
+            {blog.title} {blog.author} <button onClick={toggleDetails}>{showDetails ? 'Hide' : 'View'}</button>
           </div>
-          <div>
-            {blog.user && <div>{blog.user.name}</div>}
-            <button onClick={deleteBlog}>Delete</button>
-          </div>
+          {showDetails && (
+            <div>
+              <div>{blog.url}</div>
+              <div>
+            Likes: {blog.likes} <button onClick={handleLike}>Like</button>
+              </div>
+              <div>
+                {blog.user && <div>{blog.user.name}</div>}
+                <button onClick={deleteBlog}>Delete</button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
