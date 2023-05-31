@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
@@ -15,14 +16,14 @@ const App = () => {
   const [newBlog, setNewBlog] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
-  const [message, setMessage] = useState({ text:'', type: ''})
-  const [error, setError] = useState({ text:'', type: ''})
+  const [message, setMessage] = useState({ text:'', type: '' })
+  const [error, setError] = useState({ text:'', type: '' })
   const [loginVisible, setLoginVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -36,13 +37,29 @@ const App = () => {
 
   const blogFormRef = useRef()
 
+  const addLike = async (blogId) => {
+    try {
+      const blogToUpdate = blogs.find((blog) => blog.id === blogId)
+      const updatedBlog = {
+        ...blogToUpdate,
+        likes: blogToUpdate.likes + 1,
+      }
+      const returnedBlog = await blogService.update(blogId, updatedBlog)
+      setBlogs((prevBlogs) =>
+        prevBlogs.map((blog) => (blog.id === returnedBlog.id ? returnedBlog : blog))
+      )
+    } catch (error) {
+      console.error('Error updating likes:', error)
+    }
+  }
+
   const BlogsList = ({ blogs }) => {
     const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
 
     return (
       <div>
         {sortedBlogs.map((blog) =>
-        <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} />
+          <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} addLike={addLike} />
         )}
       </div>
     )
@@ -65,7 +82,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setError({text: 'Wrong username or password', type: 'error'})
+      setError({ text: 'Wrong username or password', type: 'error' })
       setTimeout(() => {
         setError({ text: '', type: '' })
       }, 5000)
@@ -93,7 +110,7 @@ const App = () => {
       setNewBlog('')
       setNewAuthor('')
       setNewUrl('')
-      setMessage({text: `A new blog ${newBlog} by ${newAuthor} added`, type: 'message'})
+      setMessage({ text: `A new blog ${newBlog} by ${newAuthor} added`, type: 'message' })
       setTimeout(() => {
         setMessage({ text: '', type: '' })
       }, 5000)
@@ -103,7 +120,7 @@ const App = () => {
       }, 5000)
     }
   }
-  
+
   if (user === null) {
     return (
       <div>
@@ -111,20 +128,20 @@ const App = () => {
         {error.text && (
           <div className={`error ${error.type === 'message' ? 'message-success' : 'message-error'}`}>
             {error.text}
-      </div>
-    )}
-      <div>
-        <Togglable buttonLabel='Login'>
-          <LoginForm
-            username={username}
-            password={password}
-            handleUserChange={({ target }) => setUsername(target.value)}
-            handlePasswordChange={({ target }) => setPassword(target.value)}
-            handleSubmit={handleLogin}
-          />
-        </Togglable>
           </div>
+        )}
+        <div>
+          <Togglable buttonLabel='Login'>
+            <LoginForm
+              username={username}
+              password={password}
+              handleUserChange={({ target }) => setUsername(target.value)}
+              handlePasswordChange={({ target }) => setPassword(target.value)}
+              handleSubmit={handleLogin}
+            />
+          </Togglable>
         </div>
+      </div>
     )
   }
 
@@ -135,9 +152,9 @@ const App = () => {
         {user.name} is logged in <button onClick={handleLogout}>Logout</button>
       </p>
       {message.text && (
-      <div className={`message ${message.type === 'message' ? 'message-success' : 'message-error'}`}>
-        {message.text}
-      </div>
+        <div className={`message ${message.type === 'message' ? 'message-success' : 'message-error'}`}>
+          {message.text}
+        </div>
       )}
       <div>
         <Togglable buttonLabel="Add new blog" ref={blogFormRef}>
@@ -152,7 +169,7 @@ const App = () => {
           />
         </Togglable>
       </div>
-      <BlogsList blogs={blogs}/>
+      <BlogsList blogs={blogs} />
     </div>
   )
 }

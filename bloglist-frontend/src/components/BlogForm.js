@@ -1,7 +1,7 @@
-const BlogForm = ({ handleSubmit, handleTitle, handleAuthor, handleUrl, value}) => {
+const BlogForm = ({ handleSubmit, handleTitle, handleAuthor, handleUrl, value }) => {
 
-return (
-  <div>
+  return (
+    <div>
       <h3>Create new</h3>
       <form onSubmit={handleSubmit}>
         <div>
@@ -11,7 +11,7 @@ return (
             value={value}
             onChange={handleTitle}
           />
-        </div> 
+        </div>
         <div>
         Author
           <input
@@ -19,16 +19,16 @@ return (
             value={value}
             onChange={handleAuthor}
           />
-          </div>
-          <div>
+        </div>
+        <div>
           Url
           <input
             type="text"
             value={value}
             onChange={handleUrl}
           />
-          </div>
-          <button type="submit">Create</button>
+        </div>
+        <button type="submit">Create</button>
       </form>
     </div>
   )
