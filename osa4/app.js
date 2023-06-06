@@ -29,6 +29,12 @@ app.use(middleware.requestLogger)
 app.use('/api', blogsRouter) // tänne määritellään /api URL:iin, blogsissa taas /blogs, muuten api menee tuplana!
 app.use('/api', usersRouter)
 app.use('/api', loginRouter)
+
+if (process.env.NODE_ENV === 'test') {
+  const testsRouter = require ('./controllers/testing')
+  app.use('/api/testing', testsRouter)
+}
+
 app.use(middleware.tokenExtractor)
 
 app.use(middleware.unknownEndpoint)
