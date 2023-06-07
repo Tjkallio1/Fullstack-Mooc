@@ -57,7 +57,7 @@ const Blog = ({ blog, blogs, setBlogs, addLike }) => {
   return (
     <div style={blogStyle}>
       {blog && (
-        <div>
+        <div className='blog'>
           <div>
             {blog.title} {blog.author} <button onClick={toggleDetails}>{showDetails ? 'Hide' : 'View'}</button>
           </div>
