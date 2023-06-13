@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 const { defineConfig } = require("cypress")
 
 module.exports = defineConfig({
