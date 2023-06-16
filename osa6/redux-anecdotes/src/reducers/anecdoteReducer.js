@@ -26,7 +26,7 @@ const reducer = (state = initialState, action) => {
   console.log('action', action)
 
   switch (action.type) {
-    case 'NEW VOTE':
+    case 'NEW_VOTE':
       const { id } = action.payload
       const updatedState = state.map(anecdote => 
         anecdote.id === id
@@ -34,18 +34,30 @@ const reducer = (state = initialState, action) => {
         : anecdote
         )
         return updatedState
+    
+    case 'NEW_ANECDOTE':
+      return [...state, action.payload]   
       default:
         return state
   }
 }
 
-const store = createStore(reducer)
-
 export const addVote = (id) => {
   return{
-    type: 'NEW VOTE',
+    type: 'NEW_VOTE',
     payload: {
       id: id
+    }
+  }
+}
+
+export const createAnecdote = (content) => {
+  return {
+    type: 'NEW_ANECDOTE',
+    payload: {
+      content,
+      id: getId(),
+      votes: 0
     }
   }
 }
