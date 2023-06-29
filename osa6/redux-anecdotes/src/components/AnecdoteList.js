@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { addVote } from "../reducers/anecdoteReducer"
 import Filter from "./Filter"
@@ -6,21 +6,23 @@ import Filter from "./Filter"
 const AnecdoteList = () => {
 
   const anecdotes = useSelector(state => state.anecdotes)
-  const filter = useSelector(state => state.filter)
+  const filterValue = useSelector(state => state.filter)
   const dispatch = useDispatch()
 
   const vote = (id) => {
-    dispatch(addVote(id))
+    dispatch(addVote( { id }))
     console.log('vote', id)
   }
 
-  const filteredAnecdotes = anecdotes.filter((anecdote) => 
-  anecdote.content.toLowerCase().includes(filter.toLowerCase())
-  )
+  const sortedAnecdotes = [...anecdotes].sort((a, b) => b.votes - a.votes)
 
-  const sortedAnecdotes = filteredAnecdotes.sort((a, b) => b.votes - a.votes)
+  const filteredAnecdotes = filterValue 
+    ? sortedAnecdotes.filter((anecdote) => 
+      anecdote.content.toLowerCase().includes(filterValue.toLowerCase())
+    ) 
+  : sortedAnecdotes
 
-  const displayedAnecdotes = filter === 'ALL' ? anecdotes : sortedAnecdotes
+  const displayedAnecdotes = filterValue === 'ALL' ? sortedAnecdotes : filteredAnecdotes
 
   return (
     <div>
