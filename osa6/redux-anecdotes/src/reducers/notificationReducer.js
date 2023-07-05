@@ -7,7 +7,9 @@ const notificationSlice = createSlice({
   initialState,
   reducers: {
     setNotification: (state, action) => {
-      return action.payload
+      console.log('payload:', action.payload)
+      const { content } = action.payload
+      return `you voted '${content}'`
     },
     clearNotification: () => {
         return initialState
