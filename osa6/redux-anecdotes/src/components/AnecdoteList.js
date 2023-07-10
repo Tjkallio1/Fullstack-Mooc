@@ -1,8 +1,9 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { addVote } from "../reducers/anecdoteReducer"
+import { addVote, setAnecdotes } from "../reducers/anecdoteReducer"
 import Filter from "./Filter"
 import Notification from "./Notification"
+import anecdoteService from "../services/anecdoteService"
 import { clearNotification, setNotification } from "../reducers/notificationReducer"
 
 const AnecdoteList = () => {
@@ -10,13 +11,18 @@ const AnecdoteList = () => {
   const anecdotes = useSelector(state => state.anecdotes)
   const filterValue = useSelector(state => state.filter)
   const dispatch = useDispatch()
+  
+  useEffect(() => {
+    anecdoteService
+      .getAll().then(anecdotes => dispatch(setAnecdotes(anecdotes)))
+  }, [dispatch])
 
-  const vote = (id, ) => {
+  const vote = (id) => {
     const anecdote = anecdotes.find((anecdote) => anecdote.id === id)
     console.log('anecdote:', anecdote)
     dispatch(addVote( { id }))
     console.log('vote', id)
-    dispatch(setNotification({ content: anecdote.content })) //tänne pitää saada äänestetty anekdootti
+    dispatch(setNotification({ content: anecdote.content })) 
     setTimeout(() => {
       dispatch(clearNotification())
     }, 5000)
@@ -26,13 +32,12 @@ const AnecdoteList = () => {
 
   const filteredAnecdotes = filterValue 
     ? sortedAnecdotes.filter((anecdote) => 
-      anecdote.content.toLowerCase().includes(filterValue.toLowerCase())
+      anecdote.content && anecdote.content.toLowerCase().includes(filterValue.toLowerCase())
     ) 
   : sortedAnecdotes
 
   const displayedAnecdotes = filterValue === 'ALL' ? sortedAnecdotes : filteredAnecdotes
 
-  // notification pitää saada häviämään perustilassa ja 5 sekuntia äänestämisestä 
   return (
     <div>
       <h2>Anecdotes</h2>
