@@ -13,9 +13,21 @@ const createNew = async (content) => {
     return response.data
 }
 
+//ei vielä toimi, lisää aina uuden tyhjän id:n
+const addLike = async (id) => {
+    const anecdote = await axios.get(`${baseUrl}/${id}`)
+    const updatedAnecdote = {
+        ...anecdote.data,
+        votes: anecdote.data.votes + 1
+    }
+    const response = await axios.put(`${baseUrl}/${id}`, updatedAnecdote)
+    return response.data
+}
+
 const anecdoteService = {
     getAll,
-    createNew
+    createNew,
+    addLike
 }
 
 export default anecdoteService
