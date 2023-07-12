@@ -9,7 +9,7 @@ const notificationSlice = createSlice({
     setNotification: (state, action) => {
       console.log('payload:', action.payload)
       const { content } = action.payload
-      return `You voted '${content}'`
+      return `you voted '${content}'`
     },
     clearNotification: () => {
         return initialState
