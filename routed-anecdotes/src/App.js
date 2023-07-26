@@ -3,6 +3,7 @@ import {
   BrowserRouter as Router,
   Routes, Route, Link, useParams, useNavigate
 } from 'react-router-dom'
+import { useField } from './hooks'
 
 const Menu = ({anecdotes, addNew, notification}) => {
   const padding = {
@@ -72,23 +73,13 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
+  /*
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
+  */
 
-  const navigate = useNavigate()
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    props.addNew({
-      content,
-      author,
-      info,
-      votes: 0
-    })
-    navigate('/')
-  }
-
+/*
   return (
     <div>
       <h2>create a new anecdote</h2>
@@ -109,7 +100,43 @@ const CreateNew = (props) => {
       </form>
     </div>
   )
+*/
 
+const navigate = useNavigate()
+
+const content = useField('')
+const author = useField('')
+const info = useField('')
+
+const handleSubmit = (e) => {
+  e.preventDefault()
+  props.addNew({
+    content: content.value,
+    author: author.value,
+    info: info.value,
+    votes: 0
+  })
+  navigate('/')
+}
+
+  return (
+    <div>
+      <h2>create a new anecdote</h2>
+        <form onSubmit={handleSubmit}>
+          content:
+          <input {...content} type="text" />
+          <br/>
+          author:
+          <input {...author} type="text" />
+          <br/>
+          url for more info:
+          <input {...info} type="text" />
+          <br/>
+          <button type='submit'>create</button>
+          <button>reset</button>
+        </form>
+    </div>
+  )
 }
 
 const App = () => {
