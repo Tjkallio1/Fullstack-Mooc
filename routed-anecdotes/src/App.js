@@ -108,6 +108,12 @@ const content = useField('')
 const author = useField('')
 const info = useField('')
 
+const handleReset = () => {
+  content.reset()
+  author.reset()
+  info.reset()
+}
+
 const handleSubmit = (e) => {
   e.preventDefault()
   props.addNew({
@@ -133,7 +139,7 @@ const handleSubmit = (e) => {
           <input {...info} type="text" />
           <br/>
           <button type='submit'>create</button>
-          <button>reset</button>
+          <button type='button' onClick={handleReset}>reset</button> 
         </form>
     </div>
   )

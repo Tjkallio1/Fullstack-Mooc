@@ -1,3 +1,4 @@
+import { type } from '@testing-library/user-event/dist/type'
 import { useState } from 'react'
 
 export const useField = (type) => {
@@ -7,9 +8,14 @@ export const useField = (type) => {
         setValue(event.target.value)
     }
 
+    const reset = () => {
+        setValue('')
+    }
+
     return {
         type,
         value,
-        onChange
+        onChange,
+        reset
     }
 }
