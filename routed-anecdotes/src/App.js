@@ -130,13 +130,13 @@ const handleSubmit = (e) => {
       <h2>create a new anecdote</h2>
         <form onSubmit={handleSubmit}>
           content:
-          <input {...content} type="text" />
+          <input {...{ type: content.type, value: content.value, onChange: content.onChange }} />
           <br/>
           author:
-          <input {...author} type="text" />
+          <input {...{ type: author.type, value: author.value, onChange: author.onChange }} />
           <br/>
           url for more info:
-          <input {...info} type="text" />
+          <input {...{ type: info.type, value: info.value, onChange: info.onChange }} />
           <br/>
           <button type='submit'>create</button>
           <button type='button' onClick={handleReset}>reset</button> 
