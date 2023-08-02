@@ -1,9 +1,12 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import Notification from './components/Notification'
+import { setNotification, clearNotification } from './reducers/notificationReducer'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import './app.css'
+//import './app.css'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
@@ -16,9 +19,13 @@ const App = () => {
   const [newBlog, setNewBlog] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
-  const [message, setMessage] = useState({ text: '', type: '' })
-  const [error, setError] = useState({ text: '', type: '' })
+  //const [message, setMessage] = useState({ text: '', type: '' })
+  //const [error, setError] = useState({ text: '', type: '' })
+  const successMessage  = useSelector((state) => state.notification.message)
+  const errorMessage = useSelector((state) => state.notification.error)
   const [loginVisible, setLoginVisible] = useState(false)
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -90,9 +97,11 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setError({ text: 'Wrong username or password', type: 'error' })
+      dispatch(setNotification({
+        message: 'Wrong username or password',
+        type: 'error' }))
       setTimeout(() => {
-        setError({ text: '', type: '' })
+        dispatch(clearNotification())
       }, 5000)
     }
   }
@@ -118,12 +127,12 @@ const App = () => {
       setNewBlog('')
       setNewAuthor('')
       setNewUrl('')
-      setMessage({
-        text: `A new blog ${newBlog} by ${newAuthor} added`,
-        type: 'message',
-      })
+      dispatch(setNotification({
+        message: `A new blog ${newBlog} by ${newAuthor} added`,
+        type: 'success',
+      }))
       setTimeout(() => {
-        setMessage({ text: '', type: '' })
+        dispatch(clearNotification())
       }, 5000)
       blogFormRef.current.toggleVisibility()
     } catch (exception) {
@@ -135,17 +144,7 @@ const App = () => {
     return (
       <div>
         <h2>Please log in</h2>
-        {error.text && (
-          <div
-            className={`error ${
-              error.type === 'message'
-                ? 'message-success'
-                : 'message-error'
-            }`}
-          >
-            {error.text}
-          </div>
-        )}
+        <Notification/>
         <div>
           <Togglable buttonLabel="Login">
             <LoginForm
@@ -168,21 +167,11 @@ const App = () => {
   return (
     <div>
       <h2>Blogs</h2>
+      <Notification/>
       <p>
         {user.name} is logged in{' '}
         <button onClick={handleLogout}>Logout</button>
       </p>
-      {message.text && (
-        <div
-          className={`message ${
-            message.type === 'message'
-              ? 'message-success'
-              : 'message-error'
-          }`}
-        >
-          {message.text}
-        </div>
-      )}
       <div>
         <Togglable buttonLabel="Add new blog" ref={blogFormRef}>
           <BlogForm
