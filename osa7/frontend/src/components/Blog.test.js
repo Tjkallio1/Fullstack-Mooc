@@ -3,7 +3,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import Blog from './Blog'
 import BlogForm from './BlogForm'
-import blogService from '../services/blogs'
+import blogService from '../services/blogService'
 //import userEvent from '@testing-library/user-event'
 
 test('renders content', () => {

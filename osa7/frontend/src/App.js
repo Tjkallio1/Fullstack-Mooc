@@ -3,13 +3,15 @@ import { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Notification from './components/Notification'
 import { setNotification, clearNotification } from './reducers/notificationReducer'
+import { initializeBlogs } from './reducers/blogReducer'
 import Blog from './components/Blog'
-import blogService from './services/blogs'
+import blogService from './services/blogService'
 import loginService from './services/login'
 //import './app.css'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+import { set } from 'mongoose'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -28,10 +30,6 @@ const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
-  }, [])
-
-  useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
@@ -42,6 +40,8 @@ const App = () => {
 
   const blogFormRef = useRef()
 
+
+  /*
   const addLike = async (blogId) => {
     try {
       const blogToUpdate = blogs.find((blog) => blog.id === blogId)
@@ -50,7 +50,7 @@ const App = () => {
         likes: blogToUpdate.likes + 1,
       }
       const returnedBlog = await blogService.update(blogId, updatedBlog)
-      setBlogs((prevBlogs) =>
+      initializeBlogs((prevBlogs) =>
         prevBlogs.map((blog) =>
           blog.id === returnedBlog.id ? returnedBlog : blog
         )
@@ -77,6 +77,7 @@ const App = () => {
       </div>
     )
   }
+  */
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -134,6 +135,7 @@ const App = () => {
       setTimeout(() => {
         dispatch(clearNotification())
       }, 5000)
+      window.location.reload(false)
       blogFormRef.current.toggleVisibility()
     } catch (exception) {
       setTimeout(() => {}, 5000)
@@ -144,7 +146,7 @@ const App = () => {
     return (
       <div>
         <h2>Please log in</h2>
-        <Notification/>
+        <Notification />
         <div>
           <Togglable buttonLabel="Login">
             <LoginForm
@@ -167,7 +169,7 @@ const App = () => {
   return (
     <div>
       <h2>Blogs</h2>
-      <Notification/>
+      <Notification />
       <p>
         {user.name} is logged in{' '}
         <button onClick={handleLogout}>Logout</button>
@@ -187,7 +189,7 @@ const App = () => {
           />
         </Togglable>
       </div>
-      <BlogsList blogs={blogs} setBlogs={setBlogs} addLike={addLike} />
+      <Blog />
     </div>
   )
 }

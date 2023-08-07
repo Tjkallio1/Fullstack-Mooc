@@ -21,12 +21,9 @@ const create = async (newObject) => {
   return response.data
 }
 
-const update = (id, updatedBlog) => {
-  const request = axios.put(
-    `http://localhost:3003/api/blogs/${id}`,
-    updatedBlog
-  )
-  return request.then((response) => response.data)
+const update = async (id, updatedBlog) => {
+  const response = axios.put(`http://localhost:3003/api/blogs/${id}`, updatedBlog)
+  return response.data
 }
 
 const remove = async (id) => {
