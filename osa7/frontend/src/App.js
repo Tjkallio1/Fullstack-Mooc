@@ -2,8 +2,10 @@
 import { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Notification from './components/Notification'
+import UserInfo from './components/UserInfo'
 import { setNotification, clearNotification } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
+import {  setUser } from './reducers/userReducer'
 import Blog from './components/Blog'
 import blogService from './services/blogService'
 import loginService from './services/login'
@@ -12,12 +14,16 @@ import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import { set } from 'mongoose'
+import {
+  BrowserRouter as Router,
+  Routes, Route, Link
+} from 'react-router-dom'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+  //const [user, setUser] = useState(null)
   const [newBlog, setNewBlog] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
@@ -28,7 +34,9 @@ const App = () => {
   const [loginVisible, setLoginVisible] = useState(false)
 
   const dispatch = useDispatch()
+  const user = useSelector((state) => state.user)
 
+  /*
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
@@ -37,6 +45,7 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+  */
 
   const blogFormRef = useRef()
 
@@ -94,7 +103,7 @@ const App = () => {
         JSON.stringify(user)
       )
       blogService.setToken(user.token)
-      setUser(user)
+      dispatch(setUser(user))
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -110,7 +119,7 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     blogService.setToken(null)
-    setUser(null)
+    dispatch(setUser(null))
   }
 
   const createBlog = async (event) => {
@@ -140,6 +149,29 @@ const App = () => {
     } catch (exception) {
       setTimeout(() => {}, 5000)
     }
+  }
+
+  const Home = () => {
+    return (
+      <div>
+        <Togglable buttonLabel="Add new blog" ref={blogFormRef}>
+          <BlogForm
+            title={newBlog}
+            author={newAuthor}
+            url={newUrl}
+            handleTitle={({ target }) => setNewBlog(target.value)}
+            handleAuthor={({ target }) =>
+              setNewAuthor(target.value)
+            }
+            handleUrl={({ target }) => setNewUrl(target.value)}
+            handleSubmit={createBlog}
+          />
+        </Togglable>
+        <div>
+          <Blog />
+        </div>
+      </div>
+    )
   }
 
   if (user === null) {
@@ -174,22 +206,12 @@ const App = () => {
         {user.name} is logged in{' '}
         <button onClick={handleLogout}>Logout</button>
       </p>
-      <div>
-        <Togglable buttonLabel="Add new blog" ref={blogFormRef}>
-          <BlogForm
-            title={newBlog}
-            author={newAuthor}
-            url={newUrl}
-            handleTitle={({ target }) => setNewBlog(target.value)}
-            handleAuthor={({ target }) =>
-              setNewAuthor(target.value)
-            }
-            handleUrl={({ target }) => setNewUrl(target.value)}
-            handleSubmit={createBlog}
-          />
-        </Togglable>
-      </div>
-      <Blog />
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/users" element={<UserInfo />} />
+        </Routes>
+      </Router>
     </div>
   )
 }

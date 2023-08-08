@@ -54,7 +54,6 @@ const Blog = () => {
 
   return (
     <div>
-      <h2>Blogs</h2>
       {sortedBlogs.map(blog => (
         <div key={blog.id} className="blog" style={blogStyle}>
           <div>
