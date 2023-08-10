@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Notification from './components/Notification'
 import UserInfo from './components/UserInfo'
+import SingleUser from './components/SingleUser'
+import SingleBlog from './components/SingleBlog'
 import { setNotification, clearNotification } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
 import {  setUser } from './reducers/userReducer'
@@ -154,6 +156,7 @@ const App = () => {
   const Home = () => {
     return (
       <div>
+        <h2>Blog app</h2>
         <Togglable buttonLabel="Add new blog" ref={blogFormRef}>
           <BlogForm
             title={newBlog}
@@ -170,6 +173,31 @@ const App = () => {
         <div>
           <Blog />
         </div>
+      </div>
+    )
+  }
+
+  const Menu = () => {
+
+    const padding = {
+      paddingRight: 5
+    }
+    return (
+      <div>
+        <Router>
+          <div>
+            <Link style={padding} to='/'>Blogs</Link>
+            <Link style={padding} to='/users'>Users</Link>
+            {user.name} is logged in{' '}
+            <button onClick={handleLogout}>Logout</button>
+          </div>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/users" element={<UserInfo />} />
+            <Route path="/users/:id" element={<SingleUser />} />
+            <Route path="/blogs/:id" element={<SingleBlog />} />
+          </Routes>
+        </Router>
       </div>
     )
   }
@@ -200,18 +228,8 @@ const App = () => {
 
   return (
     <div>
-      <h2>Blogs</h2>
       <Notification />
-      <p>
-        {user.name} is logged in{' '}
-        <button onClick={handleLogout}>Logout</button>
-      </p>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/users" element={<UserInfo />} />
-        </Routes>
-      </Router>
+      <Menu />
     </div>
   )
 }

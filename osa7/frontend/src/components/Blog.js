@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
-import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { initializeBlogs, addLike, deleteBlog } from '../reducers/blogReducer'
-import blogService from '../services/blogService'
+import { initializeBlogs } from '../reducers/blogReducer'
+import { Link } from 'react-router-dom'
 
 const Blog = () => {
   const dispatch = useDispatch()
@@ -12,6 +11,7 @@ const Blog = () => {
     dispatch(initializeBlogs())
   }, [dispatch])
 
+  /*
   const [showDetails, setShowDetails] = useState(({}))
   const [selectedBlog, setSelectedBlog] = useState(null)
 
@@ -22,25 +22,7 @@ const Blog = () => {
       [blog.id]: !prevState[blog.id]
     }))
   }
-
-  const handleLike = async (id) => {
-    const blog = blogs.find((blog) => blog.id === id)
-    const updatedBlog = { ...blog, likes: blog.likes + 1 }
-
-    try {
-      await blogService.update(id, updatedBlog)
-      dispatch(addLike({ id }))
-    } catch (error) {
-      console.error('Error updating likes:', error)
-    }
-  }
-
-  const handleDelete = async (blog) => {
-    if (window.confirm(`Do you want to delete the blog "${blog.title}" by ${blog.author}?`)) {
-      await blogService.remove(blog.id)
-      dispatch(deleteBlog(blog.id))
-    }
-  }
+  */
 
   const blogStyle = {
     paddingTop: 10,
@@ -57,27 +39,12 @@ const Blog = () => {
       {sortedBlogs.map(blog => (
         <div key={blog.id} className="blog" style={blogStyle}>
           <div>
-            {blog.title} {blog.author}
-            <button onClick={() => toggleDetails(blog)}>
-              {showDetails[blog.id] ? 'Hide' : 'View'}
-            </button>
+            <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
           </div>
-          {showDetails[blog.id] && selectedBlog === blog && (
-            <div>
-              <div>{blog.url}</div>
-              <div>
-                Likes: {blog.likes}
-                <button onClick={() => handleLike(blog.id)}>Like</button>
-              </div>
-              <div>
-                {blog.user && <div>{blog.user.name}</div>}
-                <button onClick={() => handleDelete(blog)}>Delete</button>
-              </div>
-            </div>
-          )}
         </div>
       ))}
     </div>
-  )}
+  )
+}
 
 export default Blog
