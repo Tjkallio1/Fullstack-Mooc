@@ -18,7 +18,7 @@ import Togglable from './components/Togglable'
 import { set } from 'mongoose'
 import {
   BrowserRouter as Router,
-  Routes, Route, Link
+  Routes, Route, Link, useNavigate, Navigate
 } from 'react-router-dom'
 
 const App = () => {
@@ -36,7 +36,9 @@ const App = () => {
   const [loginVisible, setLoginVisible] = useState(false)
 
   const dispatch = useDispatch()
+
   const user = useSelector((state) => state.user)
+  console.log('User state on app load:', user)
 
   /*
   useEffect(() => {
@@ -48,6 +50,7 @@ const App = () => {
     }
   }, [])
   */
+
 
   const blogFormRef = useRef()
 
@@ -91,6 +94,7 @@ const App = () => {
   */
 
   const handleLogin = async (event) => {
+
     event.preventDefault()
     console.log('logging in with', username, password)
 
@@ -178,26 +182,21 @@ const App = () => {
   }
 
   const Menu = () => {
-
     const padding = {
-      paddingRight: 5
+      paddingRight: 5,
     }
     return (
       <div>
-        <Router>
-          <div>
-            <Link style={padding} to='/'>Blogs</Link>
-            <Link style={padding} to='/users'>Users</Link>
-            {user.name} is logged in{' '}
-            <button onClick={handleLogout}>Logout</button>
-          </div>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/users" element={<UserInfo />} />
-            <Route path="/users/:id" element={<SingleUser />} />
-            <Route path="/blogs/:id" element={<SingleBlog />} />
-          </Routes>
-        </Router>
+        <div>
+          <Link style={padding} to="/">
+            Blogs
+          </Link>
+          <Link style={padding} to="/users">
+            Users
+          </Link>
+          {user.name} is logged in{' '}
+          <button onClick={handleLogout}>Logout</button>
+        </div>
       </div>
     )
   }
@@ -227,10 +226,22 @@ const App = () => {
   }
 
   return (
-    <div>
-      <Notification />
-      <Menu />
-    </div>
+    <Router>
+      <div className='container'>
+        <Notification />
+        <Menu user={user} />
+        <Routes>
+          <Route
+            path="/"
+            element={user ? <Home /> : <Navigate to="/login" />}
+          />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/users" element={<UserInfo />} />
+          <Route path="/users/:id" element={<SingleUser />} />
+          <Route path="/blogs/:id" element={<SingleBlog />} />
+        </Routes>
+      </div>
+    </Router>
   )
 }
 

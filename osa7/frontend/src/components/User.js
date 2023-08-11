@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react'
 import blogService from '../services/blogService'
-import { saveUser } from '../reducers/userReducer'
+import { setUser } from '../reducers/userReducer'
 
 
 const User = () => {
@@ -10,10 +10,10 @@ const User = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      dispatch(saveUser(user))
+      dispatch(setUser(user))
       blogService.setToken(user.token)
     }
-  }, [])
+  }, [dispatch])
 }
 
 export default User

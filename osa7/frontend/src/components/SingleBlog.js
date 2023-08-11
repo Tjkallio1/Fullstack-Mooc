@@ -1,13 +1,16 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { initializeBlogs, addLike, deleteBlog } from '../reducers/blogReducer'
+import { initializeBlogs, addLike, deleteBlog, postComment } from '../reducers/blogReducer'
 import blogService from '../services/blogService'
 import { useParams, Link } from 'react-router-dom'
+import CommentForm from './CommentForm'
 
 const SingleBlog = () => {
 
   const dispatch = useDispatch()
   const blogs = useSelector(state => state.blogs)
+
+  const user = useSelector((state) => state.user)
 
   useEffect(() => {
     dispatch(initializeBlogs())
@@ -32,6 +35,11 @@ const SingleBlog = () => {
     }
   }
 
+  const handleCommentSubmit = (comment) => {
+    dispatch(postComment(blog.id, comment))
+  }
+
+
   const id = useParams().id
   const blog = blogs.find(blog => blog.id === id)
 
@@ -49,6 +57,19 @@ const SingleBlog = () => {
           <button onClick={() => handleDelete(blog)}>Delete</button>
         </p>
         <p>Added by {blog.user.name}</p>
+      </div>
+      <div>
+        <h3>Comments</h3>
+        {user && (
+          <CommentForm handleCommentSubmit={handleCommentSubmit} />
+        )}
+        <div>
+          <ul>
+            {blog.comments.map((comment, index) => (
+              <li key={index}>{comment}</li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   )

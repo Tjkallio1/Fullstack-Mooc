@@ -1,30 +1,36 @@
+import { Form, Button } from 'react-bootstrap'
+
 const LoginForm = (props) => {
   return (
-    <form onSubmit={props.handleSubmit}>
-      <div>
-                Username
-        <input
-          id="username"
-          type="text"
-          value={props.username}
-          name="Username"
-          onChange={props.handleUserChange}
-        />
-      </div>
-      <div>
-                Password
-        <input
-          id="password"
-          type="password"
-          value={props.password}
-          name="Password"
-          onChange={props.handlePasswordChange}
-        />
-      </div>
-      <button id="login-button" type="submit">
+    <div>
+      <Form onSubmit={props.handleSubmit}>
+        <Form.Group>
+          <div>
+            <Form.Label>Username</Form.Label>
+            <input
+              id="username"
+              type="text"
+              value={props.username}
+              name="Username"
+              onChange={props.handleUserChange}
+            />
+          </div>
+          <div>
+            <Form.Label>Password</Form.Label>
+            <input
+              id="password"
+              type="password"
+              value={props.password}
+              name="Password"
+              onChange={props.handlePasswordChange}
+            />
+            <Button variant="primary" type="submit">
                 Login
-      </button>
-    </form>
+            </Button>
+          </div>
+        </Form.Group>
+      </Form>
+    </div>
   )
 }
 

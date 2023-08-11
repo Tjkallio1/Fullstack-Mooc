@@ -4,6 +4,7 @@ const { tokenExtractor } = require('../utils/middleware')
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
+const { urlencoded } = require('express')
 
 blogsRouter.get('/blogs', async (request, response) => {
     console.log(request.body)
@@ -21,6 +22,27 @@ blogsRouter.get('/blogs/:id', async (request, response) => {
     } else {
       response.status(404).end()
     }
+})
+
+blogsRouter.post('/blogs/:id/comments', async (request, response) => {
+  const { id } = request.params
+  const { comment } = request.body
+  if(!comment) {
+    return response.status(400).json({error: 'Comment missing'})
+  }
+
+  try {
+    const blog = await Blog.findById(id)
+    if (!blog) {
+      return response.status(404).json({error:'Blog not found'})
+    }
+
+    blog.comments.push(comment)
+    const updatedBlog = await blog.save()
+    response.json(updatedBlog)
+  } catch (error) {
+    response.status(500).json({ error: 'Something went wrong' })
+  }
 })
 
 blogsRouter.use(tokenExtractor);
