@@ -8,8 +8,7 @@ interface Result {
     average: number;
 }
 
-const calculateExercises = (dailyHours: [number,
-number, number, number, number, number, number], target: number) => {
+const calculateExercises = (dailyHours: number[], target: number) => {
 
     function countTrainingDays(arr: number[]): number {
         const nonZero = arr.filter(number => number !== 0);
@@ -32,19 +31,19 @@ number, number, number, number, number, number], target: number) => {
             return 1;
         } else if (average >= 1 && average <= 2) {
             return 2;
-        } else if (average >= 2) {
+        } else {
             return 3;
         }
     }
 
-    function setRatingMessage(arr: number[], message: string): string {
+    function setRatingMessage(arr: number[]): string {
         const average = countAverage(arr.filter(number => number !== 0));
         if (average < 1) {
             return 'next week try to exercise more';
-        } else if (average >= 1 && average <= 2) {
+        } else if (average >= 1 && average < 2) {
             return 'not too bad but could be better'
-        } else if (average >= 2) {
-            return 'good job!'
+        } else {
+            return 'good job!';
         }
     }
 
@@ -54,7 +53,7 @@ number, number, number, number, number, number], target: number) => {
     const dayAverage: number = countAverage(dailyHours.filter(number => number !==0))
     const isSuccess: boolean = evaluateSuccess(dailyHours, target)
     const exerciseRating: number = setRating(dailyHours)
-    const description: string = setRatingMessage(dailyHours, 'Exercise Rating')
+    const description: string = setRatingMessage(dailyHours)
     
     return {
         periodLength: totalDays,
@@ -67,4 +66,29 @@ number, number, number, number, number, number], target: number) => {
     }
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
+function checkValidity(args: string[]): boolean {
+    if(args.length < 4) {
+        console.error('Too little arguments, please insert at least one training day');
+        return false;
+    }
+
+    for (let i = 2; i <args.length; i++) {
+        if(isNaN(parseFloat(args[i]))) {
+            console.error('Arguments must be numerical');
+            return false;
+        }
+    }
+    return true;
+}
+
+if (!checkValidity(process.argv)) {
+    process.exit(1)
+}
+
+const target: number = parseFloat(process.argv[2]);
+const dailyHours: number[] = process.argv.slice(3).map(arg => parseFloat(arg));
+
+const getResult: Result = calculateExercises(dailyHours, target);
+console.log(getResult);
+
+//console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))

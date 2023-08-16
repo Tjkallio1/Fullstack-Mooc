@@ -1,4 +1,4 @@
-const calculateBmi = (height: number, mass: number) => {
+export const calculateBmi = (height: number, mass: number) => {
     const bmi = mass / ((height / 100)**2);
 
     if (bmi <= 18.4) {
@@ -9,7 +9,7 @@ const calculateBmi = (height: number, mass: number) => {
         return 'Normal (healthy weight)';
     }
 
-    else if (bmi > 24.9 ) {
+    else {
         return 'Overweight (eat less)';
     }
 }
