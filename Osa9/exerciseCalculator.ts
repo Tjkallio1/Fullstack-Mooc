@@ -8,7 +8,7 @@ interface Result {
     average: number;
 }
 
-const calculateExercises = (dailyHours: number[], target: number) => {
+export const calculateExercises = (dailyHours: number[], target: number) => {
 
     function countTrainingDays(arr: number[]): number {
         const nonZero = arr.filter(number => number !== 0);
@@ -66,6 +66,7 @@ const calculateExercises = (dailyHours: number[], target: number) => {
     }
 }
 
+/*
 function checkValidity(args: string[]): boolean {
     if(args.length < 4) {
         console.error('Too little arguments, please insert at least one training day');
@@ -83,6 +84,11 @@ function checkValidity(args: string[]): boolean {
 
 if (!checkValidity(process.argv)) {
     process.exit(1)
+}
+*/
+
+export function checkValidity(dailyHours: number[], target: number): boolean {
+    return dailyHours.length > 0 && target > 0;
 }
 
 const target: number = parseFloat(process.argv[2]);
