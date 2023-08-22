@@ -47,7 +47,7 @@ app.post('/exercises', (_req, res) => {
     }
     
     if (!daily_exercises || !target) {
-        return res.status(400).json({ error: 'Parameters missing' })
+        return res.status(400).json({ error: 'Parameters missing' });
     }
 
     const result = calculateExercises(daily_exercises, target);
