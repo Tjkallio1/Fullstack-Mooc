@@ -1,15 +1,13 @@
+import Parts from "./Part";
+
 interface ContentProps {
-    content: { name: string; exerciseCount: number }[];
+    content: { name: string; exerciseCount: number, kind: "basic" | "group" | "background" | "special" } [];
 }
 
 const Content = (props: ContentProps): JSX.Element => {
     return (
         <div>
-            {props.content.map((part, index) => (
-                <p key={index}>
-                    {part.name} {part.exerciseCount}
-                </p>
-            ))}
+            <Parts courseParts={props.content} />
         </div>
     )
 }

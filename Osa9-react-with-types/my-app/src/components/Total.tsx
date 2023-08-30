@@ -3,7 +3,7 @@ interface TotalProps {
 }
 
 const Total = (props: TotalProps): JSX.Element => {
-    return <p>Number of exercises, {props.total}</p>
+    return <p>Number of exercises {props.total}</p>
 
 };
 
