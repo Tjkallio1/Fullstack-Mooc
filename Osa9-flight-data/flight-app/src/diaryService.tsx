@@ -21,26 +21,29 @@ export const createDiary = async (newDiary: NewDiary): Promise<Diary | string> =
       console.log(response.data);
       return response.data;
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-          const axiosError: AxiosError<ValidationError, Record<string, unknown>> = error;
-          const status = axiosError.response?.status;
-          const responseData = axiosError.response?.data;
-    
-          if (status === 400) {
-            if (responseData && responseData.message) {
-              return `Error: ${responseData.message}`;
-            } else {
-              return 'Error: Incorrect data';
-            }
-          } else if (status === 401) {
-            if (responseData && responseData.message) {
-              return `Unauthorized: ${responseData.message}`;
-            } else {
-              return 'Unauthorized';
-            }
+      if (axios.isAxiosError(error)) {
+        console.log(error.status);
+        console.error(error.response);
+        const axiosError: AxiosError<ValidationError, Record<string, unknown>> = error;
+        const status = axiosError.response?.status;
+        console.log(axiosError);
+        const responseData = axiosError.response?.data;
+  
+        if (status === 400) {
+          if (responseData && responseData.message) {
+            return responseData.message;
+          } else {
+            return 'Error: Incorrect data';
+          }
+        } else if (status === 401) {
+          if (responseData && responseData.message) {
+            return `Unauthorized: ${responseData.message}`;
+          } else {
+            return 'Unauthorized';
           }
         }
-        console.error(error);
-        return 'An unknown error occurred'; 
       }
+      console.error(error);
+      return 'An unknown error occurred'; 
+    }
   };
