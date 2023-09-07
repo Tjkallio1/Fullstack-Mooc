@@ -11,14 +11,20 @@ const getPatients = (): PatientForm[] => {
 
 // excludes ssn, USE THIS 
 const getNonSensitivePatientForm = (): NonSensitivePatientForm[] => {
-    return patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
+    return patients.map(({ id, name, dateOfBirth, gender, occupation, entries }) => ({
         id,
         name,
         dateOfBirth,
         gender,
-        occupation
+        occupation,
+        entries
     }));
 };
+
+const findById = (id: string): PatientForm | undefined => {
+    const patient = patients.find(p => p.id === id);
+    return patient;
+  };
 
 const addPatient = (newPatient: NewPatientForm) : PatientForm => {
     const newPatientaddition = {
@@ -33,5 +39,6 @@ const addPatient = (newPatient: NewPatientForm) : PatientForm => {
 export default {
     getPatients,
     getNonSensitivePatientForm,
+    findById,
     addPatient
 };

@@ -16,6 +16,8 @@ app.use('/api/diagnoses', cors(), diagnoseRouter);
 
 app.use('/api/patients', cors(), patientRouter);
 
+app.use('/api/patients/:id', cors(), patientRouter);
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
