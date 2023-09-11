@@ -77,5 +77,6 @@ const diagnoseData = [
       "latin": "Alia retinopathia proliferativa"
     }
   ];
+
   
-  export default diagnoseData;
+  export default diagnoseData; 
