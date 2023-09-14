@@ -4,7 +4,7 @@ export interface DiagnoseForm {
     latin?: string
 }
 
-interface BaseEntry {
+export interface BaseEntry {
     id: string;
     description: string;
     date: string;
@@ -12,39 +12,45 @@ interface BaseEntry {
     diagnosisCodes?: Array<DiagnoseForm['code']>;
   }
 
-  export enum HealthCheckRating {
-    "Healthy" = 0,
-    "LowRisk" = 1,
-    "HighRisk" = 2,
-    "CriticalRisk" = 3
-  }
+export enum HealthCheckRating {
+"Healthy" = 0,
+"LowRisk" = 1,
+"HighRisk" = 2,
+"CriticalRisk" = 3
+}
 
-  interface HospitalEntry extends BaseEntry {
-    type: "Hospital";
-    discharge: {
-        date: string,
-        criteria: string,
+export interface HospitalEntry extends BaseEntry {
+type: "Hospital";
+discharge: {
+    date: string,
+    criteria: string,
+}
+}
+
+export interface OccupationalHealthcareEntry extends BaseEntry {
+type: "OccupationalHealthcare";
+employerName: string,
+sickLeave?: {
+    startDate: string,
+    endDate: string,
     }
-  }
-  
-  interface OccupationalHealthcareEntry extends BaseEntry {
-    type: "OccupationalHealthcare";
-    employerName: string,
-    sickLeave?: {
-        startDate: string,
-        endDate: string,
-      }
-  }
+}
 
-  interface HealthCheckEntry extends BaseEntry {
-    type: "HealthCheck";
-    healthCheckRating: HealthCheckRating;
-  }
+export interface HealthCheckEntry extends BaseEntry {
+type: "HealthCheck";
+healthCheckRating: HealthCheckRating;
+}
 
-  export type Entry =
-  | HospitalEntry
-  | OccupationalHealthcareEntry
-  | HealthCheckEntry;
+export enum EntryType {
+Hospital = 'Hospital',
+OccupationalHealthcare = 'OccupationalHealthcare',
+HealthCheck = 'HealthCheck'
+}
+
+export type Entry =
+| HospitalEntry
+| OccupationalHealthcareEntry
+| HealthCheckEntry;
 
 export interface PatientForm {
     id: string,
@@ -58,7 +64,13 @@ export interface PatientForm {
 
 export type NonSensitivePatientForm = Omit<PatientForm, 'ssn' | 'entries'>;
 
-export type NewPatientForm = Omit<PatientForm, 'id'>;
+export type NewPatientForm = Omit<PatientForm, 'id' >;
+
+export type NewEntryForm =
+| Omit<BaseEntry, 'id'>
+| HospitalEntry
+| OccupationalHealthcareEntry
+| HealthCheckEntry;
 
 export enum Gender {
     Male = 'male',
